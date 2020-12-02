@@ -1,8 +1,9 @@
 File.stream!("input")
-|> Stream.filter(fn str ->
+|> Enum.count(fn str ->
   [_, min, max, char, pass] = Regex.run(~r/^(\d+)-(\d+) (.): (\S+)/, str)
-  count = String.graphemes(pass) |> Enum.frequencies() |> Map.get(char, 0)
-  count >= String.to_integer(min) && count <= String.to_integer(max)
+
+  String.graphemes(pass)
+  |> Enum.count(&(&1 == char))
+  |> Kernel.in(String.to_integer(min)..String.to_integer(max))
 end)
-|> Enum.count()
 |> IO.puts()
