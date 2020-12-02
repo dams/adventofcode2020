@@ -4,7 +4,7 @@ for i <- l,
     max = 2020 - i,
     j <- l,
     j <= max,
-    max2 = max - j
+    max2 = max - j,
     k <- l,
     k <= max2,
     i + j + k == 2020,
