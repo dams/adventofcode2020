@@ -14,7 +14,7 @@ defmodule T do
   def eval_instruction({"nop", _val}, pos, acc), do: {pos + 1, acc}
 end
 
-swap = %{"jmp" => "nop", "nop" => "jmp"}
+swap = %{"jmp" => "nop", "nop" => "jmp", "acc" => "acc"}
 
 instructions =
   File.read!("input")
@@ -26,15 +26,10 @@ instructions =
 
 0..(length(instructions) - 1)
 |> Enum.reduce_while(nil, fn pos, nil ->
-  case instructions |> Enum.at(pos) do
-    {"acc", _} ->
-      {:cont, nil}
-
-    {inst, val} ->
-      case List.replace_at(instructions, pos, {swap[inst], val}) |> T.run(0, 0, %{}) do
-        nil -> {:cont, nil}
-        acc -> {:halt, acc}
-      end
+  case List.update_at(instructions, pos, fn {inst, val} -> {swap[inst], val} end)
+       |> T.run(0, 0, %{}) do
+    nil -> {:cont, nil}
+    acc -> {:halt, acc}
   end
 end)
 |> IO.inspect()
