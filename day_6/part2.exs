@@ -1,0 +1,11 @@
+File.read!("input")
+|> String.split("\n\n")
+|> Enum.map(&String.split(&1, "\n"))
+|> Enum.map(fn list ->
+  Enum.map(list, &String.graphemes/1)
+  |> Enum.map(&MapSet.new/1)
+  |> Enum.reduce(&MapSet.intersection/2)
+end)
+|> Enum.map(&MapSet.size/1)
+|> Enum.sum()
+|> IO.inspect()
